@@ -1,0 +1,25 @@
+npx create-react-app facestylebarber
+
+
+cd facestylebarber
+
+
+npm start
+
+
+
+
+
+/////////////////////////
+you need node.js
+enable the script in windows
+
+
+react
+npm install react-toastify
+
+
+
+server
+npm install cors
+npm install multer
