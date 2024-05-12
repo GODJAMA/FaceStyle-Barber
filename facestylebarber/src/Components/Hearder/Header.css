@@ -1,0 +1,66 @@
+body{
+    font-size: 16px;    
+    margin: 0px auto;
+    max-width: 1024px;
+    background: grey;
+} 
+
+header{
+    background: #1d1d1f;
+    color: aliceblue;
+    display: flex;
+    vertical-align:top;
+    text-align: left;
+    height: 90px;
+}
+
+#art01 img{
+    width: 100%;
+}
+
+#art01 {
+    width: 8%;
+
+}
+#art02 {
+    margin-left: 40px;
+    margin-top: 9px;
+    width: 10px;
+}
+#art03 {
+    margin-left: 60px;
+    text-align:center;
+    vertical-align: middle;    
+    width: 80%;
+}
+
+#art04{
+    text-align: center;
+    height: 50px;
+    border-top: 2px solid orange;
+
+    border-bottom: 5px solid orange;
+
+}
+#art04 nav{
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    background: #EDEDED;
+}
+#art04 nav li{
+    margin-right: 30px;
+    display: inline-block;
+    list-style: none;
+}
+
+.divider {
+    height: 75px; /* Altura de la línea de división */
+    width: 2px; /* Ancho de la línea de división */
+    background-color: #F05A28; /* Color de la línea de división */
+    margin: 0 auto; /* Centrar la línea de división */
+}
+.letra-grande{
+    font-size: 3.5em;
+    /* font-weight: bold; */
+}

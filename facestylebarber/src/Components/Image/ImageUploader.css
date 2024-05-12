@@ -1,0 +1,17 @@
+.container {
+    font-size: 16px;
+    margin: 0 auto;
+    max-width: 1024px;
+}
+
+.image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Personalización de las notificaciones Toastify de éxito */
+/* .Toastify__toast--success {
+    background-color: #4caf50; /* Cambiar el color de fondo a verde */
+    /* color: white; /* Cambiar el color del texto a blanco */
+  /* }  */ 
+/* */  
