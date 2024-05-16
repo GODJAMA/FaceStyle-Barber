@@ -12,6 +12,7 @@ header{
     vertical-align:top;
     text-align: left;
     height: 90px;
+
 }
 
 #art01 img{
@@ -47,6 +48,8 @@ header{
     vertical-align: top;
     width: 100%;
     background: #EDEDED;
+    border-radius: 10px;
+
 }
 #art04 nav li{
     margin-right: 30px;

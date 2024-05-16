@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 
 const upload = multer({ dest: 'uploads/' });
 const app = express();
@@ -12,14 +13,24 @@ app.use(cors()); // Middleware de CORS
 // Ruta donde se guardarán las imágenes
 const uploadDir = 'imagenes';
 
+// Función para procesar la imagen con sharp
+async function procesarImagen(imagenBuffer) {
+  try {
+    // Procesar la imagen con sharp
+    await sharp(imagenBuffer)
+      .resize(200, 300) // Por ejemplo, cambiar el tamaño de la imagen
+      .toFile(path.join(__dirname, 'imagenes', 'imagen_procesada.jpg'));
+    console.log('Imagen procesada con éxito.');
+  } catch (error) {
+    console.error('Error al procesar la imagen:', error);
+    throw error;
+  }
+}
+
 // Endpoint para recibir la imagen
-app.post('/upload-image', upload.single('image'), (req, res) => {
+app.post('/upload-image', upload.single('image'), async (req, res) => {
   // Obtener la ruta temporal de la imagen
   const tempPath = req.file.path;
-  // Obtener el nombre original de la imagen
-  const originalName = req.file.originalname;
-  // Definir la ruta donde se guardará la imagen en tu proyecto
-  const targetPath = path.join(uploadDir, originalName);
 
   try {
     // Verificar si el directorio de destino existe, si no, crearlo
@@ -27,25 +38,18 @@ app.post('/upload-image', upload.single('image'), (req, res) => {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    // Crear un stream de lectura desde el archivo temporal
-    const readStream = fs.createReadStream(tempPath);
-    // Crear un stream de escritura hacia la ubicación de destino
-    const writeStream = fs.createWriteStream(targetPath);
+    // Leer la imagen desde la carpeta imagenes
+    const imagenBuffer = fs.readFileSync(tempPath);
 
-    // Pipe (conectar) el stream de lectura al stream de escritura
-    readStream.pipe(writeStream);
+    // Procesar la imagen
+    await procesarImagen(imagenBuffer);
 
-    // Cuando el proceso de escritura haya terminado, eliminar el archivo temporal
-    writeStream.on('finish', () => {
-      fs.unlinkSync(tempPath); // Eliminar el archivo temporal
-      console.log('Imagen guardada en:', targetPath);
-      // Envía una respuesta de éxito junto con un mensaje JSON
-      res.json({ success: true, message: 'Imagen recibida y guardada exitosamente.' });
-    });
+    // Devolver una respuesta exitosa al cliente
+    res.json({ success: true, message: 'Imagen recibida y procesada exitosamente.' });
   } catch (error) {
-    console.error('Error al guardar la imagen:', error);
+    console.error('Error al procesar la imagen:', error);
     // Envía una respuesta de error
-    res.status(500).send('Error al guardar la imagen.');
+    res.status(500).send('Error al procesar la imagen.');
   }
 });
 

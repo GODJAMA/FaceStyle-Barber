@@ -17,8 +17,7 @@ export default function Header() {
         </article>
         {/* <hr/> */}
       </header>
-        <article id='art04'>
-         
+        <article id='art04'>         
           <nav>
             <ul>
               <li>Barberia</li>

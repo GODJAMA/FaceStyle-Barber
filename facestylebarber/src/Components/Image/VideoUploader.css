@@ -1,0 +1,76 @@
+/* VideoUploader.css */
+/* body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+  }
+   */
+  .container {
+    font-size: 16px;
+    margin: 0 auto;
+    max-width: 1024px;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .header {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .stop-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #f00; /* Color de fondo rojo, puedes cambiarlo según tus preferencias */
+    color: #fff; /* Color del texto blanco */
+    border: none; /* Eliminar el borde del botón */
+    cursor: pointer; /* Cambiar el cursor al pasar por encima del botón */
+  }
+  
+  
+  .header h1 {
+    font-size: 2em;
+    margin: 0 0 20px;
+    color: #333;
+  }
+  
+  .start-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+  }
+  
+  .start-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .centered-video {
+    width: 400px;
+    height: 400px;
+    margin-bottom: 10px; /* Ajusta el margen según sea necesario */
+  }
+  
+  
+  .video-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  

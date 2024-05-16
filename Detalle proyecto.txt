@@ -18,7 +18,7 @@ enable the script in windows
 
 react
 npm install react-toastify
-
+npm install
 
 
 server
@@ -50,3 +50,123 @@ server
 npm install cors
 >>>>>>> 2bfbe328c41d37b6bd3fcc8561e0e0d3a4b5f970
 npm install multer
+npm install @tensorflow/tfjs-node
+
+
+npm install axios
+
+contante
+npm install opencv4nodejs dlib
+pip install gitpython
+
+
+python
+pip install opencv-python
+pip install dlib
+
+
+
+
+const express = require('express');
+const multer = require('multer');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+
+const tf = require('@tensorflow/tfjs-node');
+
+const upload = multer({ dest: 'uploads/' });
+const app = express();
+
+app.use(cors()); // Middleware de CORS
+
+// Ruta donde se guardarán las imágenes
+const uploadDir = 'imagenes';
+
+// Ruta al directorio del modelo
+const MODEL_DIR = path.join(__dirname, 'apis', 'content');
+const MODEL_FILE = 'group1-shard1of1.bin';
+const MODEL_JSON_FILE = 'model.json';
+
+// Función para cargar el modelo
+async function cargarModelo() {
+  const modelo = await tf.loadLayersModel(`file://${path.join(MODEL_DIR, MODEL_JSON_FILE)}`);
+  return modelo;
+}
+
+// Endpoint para recibir la imagen
+app.post('/upload-image', upload.single('image'), (req, res) => {
+  // Obtener la ruta temporal de la imagen
+  const tempPath = req.file.path;
+  // Obtener el nombre original de la imagen
+  const originalName = req.file.originalname;
+  // Definir la ruta donde se guardará la imagen en tu proyecto
+  const targetPath = path.join(uploadDir, originalName);
+
+  try {
+    // Verificar si el directorio de destino existe, si no, crearlo
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    // Crear un stream de lectura desde el archivo temporal
+    const readStream = fs.createReadStream(tempPath);
+    // Crear un stream de escritura hacia la ubicación de destino
+    const writeStream = fs.createWriteStream(targetPath);
+
+    // Pipe (conectar) el stream de lectura al stream de escritura
+    readStream.pipe(writeStream);
+
+    // Cuando el proceso de escritura haya terminado, eliminar el archivo temporal
+    writeStream.on('finish', async () => {
+      fs.unlinkSync(tempPath); // Eliminar el archivo temporal
+      console.log('Imagen guardada en:', targetPath);
+
+      
+      try {
+        // Cargar el modelo
+        const modelo = await cargarModelo();
+
+        // Leer la imagen desde la carpeta imagenes
+        const imagenBuffer = fs.readFileSync(targetPath);
+
+        // Preprocesar la imagen (si es necesario)
+        // Por ejemplo, puedes redimensionar la imagen o normalizarla según los requisitos del modelo.
+
+        // Convertir la imagen en un tensor de TensorFlow
+        const imagenTensor = tf.node.decodeImage(imagenBuffer);
+
+        // Realizar la predicción utilizando el modelo
+        const resultadoPrediccion = modelo.predict(imagenTensor);
+
+        // Obtener el resultado de la predicción (esto dependerá de la salida del modelo)
+        // Por ejemplo, podrías obtener la clase predicha o cualquier otro resultado relevante.
+
+        // Devolver los resultados al cliente (por ejemplo, como JSON)
+        res.json({ success: true, message: 'Imagen recibida, guardada y predicción realizada exitosamente.', predictionResult: resultadoPrediccion });
+    } catch (error) {
+        console.error('Error al realizar la predicción:', error);
+        // Envía una respuesta de error
+        res.status(500).send('Error al realizar la predicción.');
+    }
+
+
+      res.json({ success: true, message: 'Imagen recibida, guardada y predicción realizada exitosamente.' });
+  });
+} catch (error) {
+  console.error('Error al procesar la imagen:', error);
+  // Envía una respuesta de error
+  res.status(500).send('Error al procesar la imagen.');
+}
+});
+
+
+
+// Iniciar el servidor
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
+
+
+npm install sharp
