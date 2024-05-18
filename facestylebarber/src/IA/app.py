@@ -1,7 +1,7 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response ,stream_with_context
 from flask_cors import CORS
 from PIL import Image
 import keras
@@ -12,16 +12,25 @@ import dlib
 import math
 import numpy as np
 from imutils import face_utils
+import json
 
 app = Flask(__name__)
 CORS(app)
 
 shape_predictor_path = "/content/shape_predictor_81_face_landmarks"
 model_path = os.path.join(shape_predictor_path, "shape_predictor_81_face_landmarks.dat")
-model = dlib.shape_predictor(model_path)
-detector = dlib.get_frontal_face_detector()
+# model = dlib.shape_predictor(model_path)
+# detector = dlib.get_frontal_face_detector()
 
 predictor = dlib.shape_predictor("/content/shape_predictor_81_face_landmarks/shape_predictor_81_face_landmarks.dat")
+
+diccionario_clases = {0: "CORAZÓN", 1: "ALARGADO", 2: "OVALADO", 3: "REDONDO", 4: "CUADRADO"}
+
+
+detector = dlib.get_frontal_face_detector()
+model = dlib.shape_predictor(model_path)
+modelo_cargado = keras.models.load_model('tipo_rostros.h5')
+
 
 # Ruta donde se guardarán las imágenes
 upload_dir = 'imagenes'
@@ -134,9 +143,6 @@ def upload_image():
     
 
 def process_image(image_path):
-    detector = dlib.get_frontal_face_detector()
-    model = dlib.shape_predictor(model_path)
-
     image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     faces_prueba = detector(gray)
@@ -235,7 +241,6 @@ def process_image(image_path):
 # Cargar el modelo desde el directorio del SavedModel
 
     # Cargar el modelo
-    modelo_cargado = keras.models.load_model('tipo_rostros.h5')
 
     # Realizar predicciones
     predictions = modelo_cargado.predict(features)
@@ -243,14 +248,19 @@ def process_image(image_path):
 
     clases_predichas = np.argmax(predictions)
     print(clases_predichas )
-    diccionario_clases = {0: "HEART", 1: "OBLONG", 2: "OVAL", 3: "ROUND", 4: "SQUARE"}
 
     return diccionario_clases[clases_predichas],image
 
 
-video_capture = cv2.VideoCapture(0)  # Usar '0' para la cámara predeterminada
+video_capture = None  
+Rostro = 'NO DETECTADO'
 
 def gen_frames():
+    global video_capture  # Declarar que se usará la variable global
+    global Rostro
+    
+    if video_capture is None:
+        video_capture = cv2.VideoCapture(0) 
     while True:
         # Leer un cuadro del video
         ret, frame = video_capture.read()
@@ -259,30 +269,137 @@ def gen_frames():
 
         # Convertir a escala de grises para detección de rostros
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
+        features = []
         # Detectar rostros
         faces = detector(gray)
+        if len(faces) == 0:
+            print('no detesto carra')
+            Rostro = 'NO DETECTADO'
+        else:
+            # Para cada rostro detectado, obtener y dibujar los landmarks
+            for face in faces:
+                landmarks = predictor(gray, face)
+                coords = face_utils.shape_to_np(landmarks)  # Convertir a coordenadas NumPy
 
-        # Para cada rostro detectado, obtener y dibujar los landmarks
-        for face in faces:
-            landmarks = predictor(gray, face)
-            landmarks_np = face_utils.shape_to_np(landmarks)  # Convertir a coordenadas NumPy
+                l3 = coords[3]          #pomulo izquierda
+                l15 = coords[15]        #pomulo derecha
+                l70 = coords[70]        #parte alta de la frente, altura de la mitad de la ceja, del lado izquierdo
+                l76 = coords[76]        #parte media entre el fin de la ceja y la frente, del lado izquierdo
+                l80 = coords[80]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l73 = coords[73]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l9 = coords[9]          #parte mas baja del rostro, menton o barbilla
+                l13 = coords[13]        #mejilla a la altura del labio inferior, del lado derecho
+                l5 = coords[5]          #mejilla a la altura del labio inferior, del lado izquierdo
+                l7 = coords[7]          #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
+                l11 = coords[11]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+                l8 = coords[8]          #parte media del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
+                l10 = coords[10]        #parte media del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+            #------------------------------------------------------
+                d1 = distance(l3, l15)                    #distancia entre los pomulos
+                d2 = distance(l76, l80)
+                d3 = distance(midpoint(l70, l73), l9)     #distacia de lado a lado de la frente
+                d4 = distance(l9, l13)                    #distancia entre la barbilla y la mejilla
+                d5 = distance(l5, l13)                    #distancia entre mejillas
+                d6 = distance(l7, l11)                    #distancia entre parte alta del menton
+                d7 = distance(l8, l10)                    #distancia entre parte media del menton
 
-            # Dibujar los puntos de referencia en el rostro
-            for (x, y) in landmarks_np:
+                DD = d1 + d2 + d3 + d4 + d5 + d6 + d7     #suma de las distancias
+            #------------------------------------------------------
+                D1 = d1/DD
+                D2 = d2/DD
+                D3 = d3/DD
+                D4 = d4/DD
+                D5 = d5/DD
+                D6 = d6/DD
+                D7 = d7/DD
+            #------------------------------------------------------
+                R1 = D2/D1
+                R2 = D1/D3
+                R3 = D2/D3
+                R4 = D1/D5
+                R5 = D6/D5
+                R6 = D4/D6
+                R7 = D6/D1
+                R8 = D5/D2
+                R9 = D4/D5
+                R10 = D7/D6
+            #------------------------------------------------------
+                A1 = angle(midpoint(l70, l73), l9, l11)
+                A2 = angle(midpoint(l70, l73), l9, l13)
+                A3 = angle(l3, l15, l13)
+            #------------------------------------------------------
+                features.append(R1)
+                features.append(R2)
+                features.append(R3)
+                features.append(R4) #
+                features.append(R5)
+                features.append(R6)
+                features.append(R7)
+                features.append(R8) #
+                features.append(R9)
+                features.append(R10)
+                features.append(D1)
+                features.append(D2)
+                features.append(D3)
+                features.append(D5)
+                features.append(D6)
+                features.append(D7)
+                features.append(A1) #
+                features.append(A2) #
+                features.append(A3) #
+
+                # print(features)
+
+                # Dibujar los puntos de referencia en el rostro
+            for (x, y) in coords:
                 cv2.circle(frame, (x, y), 2, (0, 255, 0), -1)  # Punto verde
+
+            features = np.array(features)  # Convertir a matriz NumPy
+            features = np.expand_dims(features, axis=0) 
+
+            predictions = modelo_cargado.predict(features)
+            print (predictions)
+
+            clases_predichas = np.argmax(predictions)
+            print(clases_predichas )
+
+            Rostro = diccionario_clases[clases_predichas]
+            print(diccionario_clases[clases_predichas])
+
+        
 
         # Codificar el cuadro como imagen JPEG
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
-
+        # result = {'predictions': predictions.tolist(), 'clases_predichas': clases_predichas}
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # Emitir el cuadro como streaming
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            #    b'Content-Type: text/plain\r\n\r\n' + Rostro.encode() + b'\r\n')  # Emitir el cuadro como streaming
 
 @app.route('/video_feed')
 def video_feed():
+    print('inicio de analizador tiempo real')
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/get_face_info')
+def get_face_info():
+    global Rostro
+    # Aquí incluye la lógica para detectar el rostro
+    # Supongamos que Rostro contiene los datos del rostro
+    print(Rostro)
+    return jsonify({"face_info": Rostro})
+
+@app.route('/stop_video')
+def stop_video():
+    global video_capture
+    global Rostro
+
+    if video_capture is not None:
+        video_capture.release()  # Liberar la captura de video
+        video_capture = None  # Establecer la variable a None para indicar que la captura ha sido detenida
+        Rostro = 'NO DETECTADO'
+        print('Liberar la captura de video')
+    return 'Video detenido exitosamente'
 
 
 # Iniciar el servidor
@@ -290,4 +407,3 @@ if __name__ == '__main__':
     port = 4000
     app.run(port=port)
     print(f'Servidor corriendo en el puerto {port}')
-

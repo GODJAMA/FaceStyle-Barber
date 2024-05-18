@@ -67,3 +67,16 @@ header{
     font-size: 3.5em;
     /* font-weight: bold; */
 }
+
+/* Media queries para dispositivos móviles */
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 14px; /* Reducir el tamaño de la fuente para dispositivos móviles */
+    }
+    
+    header {
+        height: 70px; /* Reducir la altura del encabezado para dispositivos móviles */
+    }
+    
+    /* Agrega más ajustes de estilo para dispositivos móviles aquí */
+}

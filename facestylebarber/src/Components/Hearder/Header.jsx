@@ -17,7 +17,7 @@ export default function Header() {
         </article>
         {/* <hr/> */}
       </header>
-        <article id='art04'>         
+        {/* <article id='art04'>         
           <nav>
             <ul>
               <li>Barberia</li>
@@ -27,7 +27,7 @@ export default function Header() {
               <li>Ficha Tecnica</li>
             </ul>
           </nav>
-        </article>
+        </article> */}
     </div>
   )
 }
