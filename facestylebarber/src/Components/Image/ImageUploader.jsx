@@ -51,7 +51,7 @@ function ImageUploader() {
             formData.append('image', selectedImage);
 
             // Realizar la solicitud POST a tu API
-            const response = await fetch('http://127.0.0.1:4000/upload-image', {
+            const response = await fetch('http://192.168.3.47:4000/upload-image', {
                 method: 'POST',
                 body: formData
             });
@@ -197,7 +197,7 @@ function ImageUploader() {
                 <div className='container'>
                     <h1>Su Tipo De Rostro Predecido: </h1>
                     <h1>{faceType}</h1>
-                    {imageUrl && <img src={imageUrl} alt="Imagen desde la API" />}
+                    {imageUrl && <img className="image" src={imageUrl} alt="Imagen desde la API" />}
                     {/* <img src={processedImagePath}  alt="Imagen procesada" />
                     <img src={`${process.env.PUBLIC_URL}/IA/imagenes/${1}`} alt="Imagen procesada" /> */}
                     {getCorteSugerido(faceType)}

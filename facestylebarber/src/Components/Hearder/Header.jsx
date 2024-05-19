@@ -13,7 +13,7 @@ export default function Header() {
         <div className="divider"></div>
         </article>
         <article id='art03'>
-          <span className='letra-grande'>FaceSyle Barber</span>
+          <span className='letra-grande'>FaceStyle Barber</span>
         </article>
         {/* <hr/> */}
       </header>

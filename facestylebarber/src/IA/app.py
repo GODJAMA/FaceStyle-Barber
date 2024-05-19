@@ -13,6 +13,7 @@ import math
 import numpy as np
 from imutils import face_utils
 import json
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -106,9 +107,22 @@ def upload_image():
             # Procesar la imagen con Pillow (PIL)
             image = Image.open(image_file)
             # image.thumbnail((200, 300))  # Cambiar el tamaño de la imagen
+            # Corregir la orientación de la imagen si es necesario
+            if hasattr(image, '_getexif'):  # Verificar si la imagen tiene información EXIF
+                exif = image._getexif()
+                if exif is not None:
+                    orientation = exif.get(0x0112)
+                    if orientation is not None:
+                        if orientation == 3:
+                            image = image.rotate(180, expand=True)
+                        elif orientation == 6:
+                            image = image.rotate(270, expand=True)
+                        elif orientation == 8:
+                            image = image.rotate(90, expand=True)
+
             image.save(os.path.join(upload_dir, original_filename))  # Guardar la imagen con el nombre original
             # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
+            print('imagen guardada')
             features, processed_image = process_image(os.path.join(upload_dir, original_filename))
 
             # cv2.imshow('Imagen con puntos de referencia', processed_image)
@@ -251,7 +265,7 @@ def process_image(image_path):
 
 
 video_capture = None  
-Rostro = 'NO DETECTADO'
+Rostro = 'Conectando'
 
 def gen_frames():
     global video_capture  # Declarar que se usará la variable global
@@ -271,7 +285,7 @@ def gen_frames():
         # Detectar rostros
         faces = detector(gray)
         if len(faces) == 0:
-            print('no detesto carra')
+            # print('no detesto carra')
             Rostro = 'NO DETECTADO'
         else:
             # Para cada rostro detectado, obtener y dibujar los landmarks
@@ -356,10 +370,10 @@ def gen_frames():
             features = np.expand_dims(features, axis=0) 
 
             predictions = modelo_cargado.predict(features)
-            print (predictions)
+            # print (predictions)
 
             clases_predichas = np.argmax(predictions)
-            print(clases_predichas )
+            # print(clases_predichas )
 
             Rostro = diccionario_clases[clases_predichas]
             print(diccionario_clases[clases_predichas])
@@ -419,6 +433,7 @@ def get_image():
 
 # Iniciar el servidor
 if __name__ == '__main__':
+    host = '0.0.0.0' 
     port = 4000
-    app.run(port=port)
+    app.run(host=host, port=port)
     print(f'Servidor corriendo en el puerto {port}')
