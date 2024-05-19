@@ -1,7 +1,7 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from flask import Flask, request, jsonify, Response ,stream_with_context
+from flask import Flask, request, jsonify, Response ,stream_with_context,send_file
 from flask_cors import CORS
 from PIL import Image
 import keras
@@ -34,7 +34,7 @@ modelo_cargado = keras.models.load_model('tipo_rostros.h5')
 
 # Ruta donde se guardarán las imágenes
 upload_dir = 'imagenes'
-
+image_gobla = ''
 
 def distance(point1, point2):
     # Unpack the coordinates from the input arrays
@@ -98,6 +98,10 @@ def upload_image():
         image_file = request.files['image']
         original_filename = image_file.filename
 
+        global image_gobla
+
+        image_gobla = original_filename
+        # print(image_gobla)
         try:
             # Procesar la imagen con Pillow (PIL)
             image = Image.open(image_file)
@@ -107,29 +111,20 @@ def upload_image():
 
             features, processed_image = process_image(os.path.join(upload_dir, original_filename))
 
+            # cv2.imshow('Imagen con puntos de referencia', processed_image)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
+
+            processed_image_path = os.path.join(upload_dir,original_filename)
+            cv2.imwrite(processed_image_path, processed_image)
+
             print('Características extraídas:', features)
             print('Imagen procesada con éxito.')
-
-            # Guardar la imagen procesada utilizando Pillow (PIL)
-            processed_image_pil = Image.fromarray(processed_image)
-            processed_image_path = os.path.join(upload_dir, 'processed_' + original_filename)
-            processed_image_pil.save(processed_image_path)
-
-            # Convertir la imagen procesada a bytes
-            # buffered = BytesIO()
-            # processed_image.save(buffered, format="JPEG")
-            # img_bytes = buffered.getvalue()
-
-            # # Codificar los bytes de la imagen en base64
-            # img_base64 = base64.b64encode(img_bytes).decode()
-
-
-            # Devolver una respuesta exitosa al cliente
+           
             return jsonify({
                 'success': True,
                 'message': 'Imagen recibida y procesada exitosamente.',
                 'processed_image_path': processed_image_path,
-                # 'processed_image_base64': img_base64,
                 'face_type': features
             }), 200
         except Exception as e:
@@ -146,6 +141,7 @@ def process_image(image_path):
     image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     faces_prueba = detector(gray)
+
 
     features = []
     for face in faces_prueba:
@@ -229,7 +225,9 @@ def process_image(image_path):
 
     # Mostrar la imagen con los puntos de referencia
     # Convertir la imagen procesada a RGB
-    
+    # cv2.imshow('Imagen con puntos de referencia', image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     # 
     features = np.array(features)  # Convertir a matriz NumPy
     features = np.expand_dims(features, axis=0)
@@ -400,6 +398,23 @@ def stop_video():
         Rostro = 'NO DETECTADO'
         print('Liberar la captura de video')
     return 'Video detenido exitosamente'
+
+# Ruta para servir la imagen
+# import os
+# from flask import send_file
+
+@app.route('/image')
+def get_image():
+    global image_gobla
+    # Obtener la ruta absoluta de la imagen
+    # image_path = os.path.abspath('1.jpg')
+    # image_path = os.path.abspath('C:/Users/juanA/OneDrive/Documentos/GitHub/FaceStyle-Barber/facestylebarber/src/IA/imagenes/1.jpg')
+    # print(';;;;;;;')
+    print(image_gobla)
+    image_path = os.path.abspath(f'C:/Users/juanA/OneDrive/Documentos/GitHub/FaceStyle-Barber/facestylebarber/src/IA/imagenes/{image_gobla}')
+    # Envía la imagen como respuesta
+    return send_file(image_path, mimetype='image/jpeg')
+
 
 
 # Iniciar el servidor
