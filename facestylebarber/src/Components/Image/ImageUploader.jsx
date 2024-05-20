@@ -147,7 +147,7 @@ function ImageUploader() {
 
     const fetchImage = async () => {
         try {
-            const response = await fetch('http://localhost:4000/image'); // Cambia la URL según sea necesario
+            const response = await fetch('http://192.168.3.47:4000/image'); // Cambia la URL según sea necesario
             if (!response.ok) {
                 throw new Error('Error al obtener la imagen');
             }
@@ -160,21 +160,28 @@ function ImageUploader() {
     return (
         <div>
         <div className="header">
-            <h2>Subir Imagen</h2>            
+            <h1>Analizador Punteo de Rostro</h1>
+            <h3>Subir Imagen</h3>            
             {/* Formulario para seleccionar una imagen */}
-            <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleImageChange}
-            />
-            {/* Botón para enviar la imagen */}
-            <button onClick={handleImageSubmit}>Enviar Imagen</button>
+            <div className="custom-input-container">
+        <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="input-file"
+            capture="environment"
+            onChange={handleImageChange}
+        />
+        {/* Botón personalizado */}
+        <button className="custom-input-button" onClick={() => fileInputRef.current.click()}>Seleccionar Imagen</button>
+
+        <button className="button submit-button" onClick={handleImageSubmit}>Enviar Imagen</button>
+
+    </div>
             {/* Botón para borrar la imagen seleccionada */}
             <p></p>
             {selectedImage && (
-                <button onClick={handleDeleteImage}>Borrar Imagen</button>
+                <button className="button delete-button" onClick={handleDeleteImage}>Borrar Imagen</button>
             )}
 
              

@@ -19,7 +19,7 @@
 .progress-container {
     width: 100%;
     height: 20px;
-    background-color: #f0f0f0;
+    background-color: #857272;
     border-radius: 4px;
     overflow: hidden;
     margin-top: 10px;
@@ -28,4 +28,68 @@
 .progress-bar {
     height: 100%;
     background-color: #007bff;
+}
+/* Estilos para los botones */
+.button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo específico para el botón de enviar */
+.submit-button {
+    margin-left: 20px;
+    background-color: #28a745; /* Cambia el color de fondo a verde */
+}
+
+/* Estilo específico para el botón de borrar */
+.delete-button {
+    background-color: #dc3545; /* Cambia el color de fondo a rojo */
+}
+
+/* Estilo específico para el botón de subir */
+.upload-button {
+    background-color: #ffc107; /* Cambia el color de fondo a amarillo */
+}
+/* Estilos para el input */
+.input-file {
+    display: none; /* Ocultar el input por defecto */
+}
+
+/* Estilos para el contenedor del botón personalizado */
+.custom-input-container {
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+}
+
+/* Estilos para el botón personalizado */
+.custom-input-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+/* Cambiar el estilo del botón al pasar el mouse sobre él */
+.custom-input-button:hover {
+    background-color: #0056b3;
+}
+
+@media only screen and (max-width: 600px) {
+    .submit-button {
+        margin-top: 20px;/* Cambia el color de fondo a verde */
+    }
 }

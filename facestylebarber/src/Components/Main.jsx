@@ -27,6 +27,7 @@ function Main() {
             Video
           </div>
         </div>
+        <p></p>
         {selectedOption === 'foto' && <ImageUploader />}
         {selectedOption === 'video' && <VideoUploader />}
       </div>

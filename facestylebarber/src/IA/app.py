@@ -30,7 +30,7 @@ diccionario_clases = {0: "CORAZÓN", 1: "ALARGADO", 2: "OVALADO", 3: "REDONDO", 
 
 detector = dlib.get_frontal_face_detector()
 model = dlib.shape_predictor(model_path)
-modelo_cargado = keras.models.load_model('tipo_rostros.h5')
+modelo_cargado = keras.models.load_model('v3.h5')
 
 
 # Ruta donde se guardarán las imágenes
@@ -163,30 +163,58 @@ def process_image(image_path):
         landmarks = model(gray, face)
         coords = face_utils.shape_to_np(landmarks)  # Convertir a coordenadas NumPy
 
-        l3 = coords[3]          #pomulo izquierda
-        l15 = coords[15]        #pomulo derecha
-        l70 = coords[70]        #parte alta de la frente, altura de la mitad de la ceja, del lado izquierdo
-        l76 = coords[76]        #parte media entre el fin de la ceja y la frente, del lado izquierdo
-        l80 = coords[80]        #parte media entre el fin de la ceja y la frente, del lado derecho
-        l73 = coords[73]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
-        l9 = coords[9]          #parte mas baja del rostro, menton o barbilla
-        l13 = coords[13]        #mejilla a la altura del labio inferior, del lado derecho
-        l5 = coords[5]          #mejilla a la altura del labio inferior, del lado izquierdo
-        l7 = coords[7]          #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
-        l11 = coords[11]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
-        l8 = coords[8]          #parte media del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
-        l10 = coords[10]        #parte media del menton o barbilla a la altura de donde acaba los labios, del lado derecho
-    #------------------------------------------------------
+        # getting some facial features from the coordinates of the landmarks
+        l1 = coords[0]
+        l2 = coords[1]
+        l3 = coords[2]          #pomulo izquierda
+        l4 = coords[3]          #pomulo izquierda
+        l5 = coords[4]          #pomulo izquierda
+        l6 = coords[5]          #pomulo izquierda
+        l7 = coords[6]          #pomulo izquierda
+        l8 = coords[7]          #pomulo izquierda
+        l9 = coords[8]          #parte mas baja del rostro, menton o barbilla
+        l10 = coords[9]        #parte media del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+        l11 = coords[10]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+        l12 = coords[11]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+        l13 = coords[12]        #mejilla a la altura del labio inferior, del lado derecho
+        l14 = coords[13]        #mejilla a la altura del labio inferior, del lado derecho
+        l15 = coords[14]        #pomulo derecha
+        l16 = coords[15]        #pomulo derecha
+        l17 = coords[16]        #pomulo derecha
+        l69 = coords[68]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l70 = coords[69]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l71 = coords[70]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l72 = coords[71]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l73 = coords[72]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l74 = coords[73]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l75 = coords[74]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+        l76 = coords[75]        #parte media entre el fin de la ceja y la frente, del lado derecho
+        l77 = coords[76]        #parte media entre el fin de la ceja y la frente, del lado derecho
+        l78 = coords[77]        #parte media entre el fin de la ceja y la frente, del lado derecho
+        l79 = coords[78]        #parte media entre el fin de la ceja y la frente, del lado derecho
+        l80 = coords[79]        #parte media entre el fin de la ceja y la frente, del lado derecho
+        l81 = coords[80]
+#------------------------------------------------------
         d1 = distance(l3, l15)                    #distancia entre los pomulos
-        d2 = distance(l76, l80)
+        d2 = distance(l76, l75)
         d3 = distance(midpoint(l70, l73), l9)     #distacia de lado a lado de la frente
         d4 = distance(l9, l13)                    #distancia entre la barbilla y la mejilla
         d5 = distance(l5, l13)                    #distancia entre mejillas
         d6 = distance(l7, l11)                    #distancia entre parte alta del menton
         d7 = distance(l8, l10)                    #distancia entre parte media del menton
+        d8 = distance(l6, l12)
+        d9 = distance(l4, l14)
+        d10 = distance(l1, l17)
+        d11 = distance(l78, l79)
+        d12 = distance(l77,l80)
+        d13 = distance(l69,l6)
+        d14 = distance(l70,l7)
+        d15 = distance(l71,l6)
 
-        DD = d1 + d2 + d3 + d4 + d5 + d6 + d7     #suma de las distancias
-    #------------------------------------------------------
+#------------------------------------------------------
+
+        DD = d1 + d2 + d3 + d4 + d5 + d6 + d7  + d8 + d9 + d10 + d11 + d12 + d13 + d14 + d15  #suma de las distancias
+#------------------------------------------------------
         D1 = d1/DD
         D2 = d2/DD
         D3 = d3/DD
@@ -194,7 +222,15 @@ def process_image(image_path):
         D5 = d5/DD
         D6 = d6/DD
         D7 = d7/DD
-    #------------------------------------------------------
+        D8 = d8/DD
+        D9 = d9/DD
+        D10 = d10/DD
+        D11 = d11/DD
+        D12 = d12/DD
+        D13 = d13/DD
+        D14 = d14/DD
+        D15 = d15/DD
+#------------------------------------------------------
         R1 = D2/D1
         R2 = D1/D3
         R3 = D2/D3
@@ -205,11 +241,16 @@ def process_image(image_path):
         R8 = D5/D2
         R9 = D4/D5
         R10 = D7/D6
-    #------------------------------------------------------
-        A1 = angle(midpoint(l70, l73), l9, l11)
-        A2 = angle(midpoint(l70, l73), l9, l13)
-        A3 = angle(l3, l15, l13)
-    #------------------------------------------------------
+#------------------------------------------------------
+        A1 = angle(midpoint(l70, l73), l9, l11) / 180
+        A2 = angle(midpoint(l70, l73), l9, l13) / 180
+        A3 = angle(l3, l15, l13) / 180
+        A4 = angle(l8, l9, l10) / 180
+        A5 = angle(l3, l4, l7) / 180
+        A6 = angle(l7, l11, l13) / 180
+
+#------------------------------------------------------
+        features = []
         features.append(R1)
         features.append(R2)
         features.append(R3)
@@ -226,9 +267,20 @@ def process_image(image_path):
         features.append(D5)
         features.append(D6)
         features.append(D7)
+        features.append(D8)
+        features.append(D9)
+        features.append(D10)
+        features.append(D11)
+        features.append(D12)
+        features.append(D13)
+        features.append(D14)
+        features.append(D15)
         features.append(A1) #
         features.append(A2) #
         features.append(A3) #
+        features.append(A4) #
+        features.append(A5) #
+        features.append(A6)#
 
         print(features)
 
@@ -293,30 +345,58 @@ def gen_frames():
                 landmarks = predictor(gray, face)
                 coords = face_utils.shape_to_np(landmarks)  # Convertir a coordenadas NumPy
 
-                l3 = coords[3]          #pomulo izquierda
-                l15 = coords[15]        #pomulo derecha
-                l70 = coords[70]        #parte alta de la frente, altura de la mitad de la ceja, del lado izquierdo
-                l76 = coords[76]        #parte media entre el fin de la ceja y la frente, del lado izquierdo
-                l80 = coords[80]        #parte media entre el fin de la ceja y la frente, del lado derecho
-                l73 = coords[73]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
-                l9 = coords[9]          #parte mas baja del rostro, menton o barbilla
-                l13 = coords[13]        #mejilla a la altura del labio inferior, del lado derecho
-                l5 = coords[5]          #mejilla a la altura del labio inferior, del lado izquierdo
-                l7 = coords[7]          #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
-                l11 = coords[11]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
-                l8 = coords[8]          #parte media del menton o barbilla a la altura de donde acaba los labios, del lado izquierdo
-                l10 = coords[10]        #parte media del menton o barbilla a la altura de donde acaba los labios, del lado derecho
-            #------------------------------------------------------
+                # getting some facial features from the coordinates of the landmarks
+                l1 = coords[0]
+                l2 = coords[1]
+                l3 = coords[2]          #pomulo izquierda
+                l4 = coords[3]          #pomulo izquierda
+                l5 = coords[4]          #pomulo izquierda
+                l6 = coords[5]          #pomulo izquierda
+                l7 = coords[6]          #pomulo izquierda
+                l8 = coords[7]          #pomulo izquierda
+                l9 = coords[8]          #parte mas baja del rostro, menton o barbilla
+                l10 = coords[9]        #parte media del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+                l11 = coords[10]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+                l12 = coords[11]        #parte alta del menton o barbilla a la altura de donde acaba los labios, del lado derecho
+                l13 = coords[12]        #mejilla a la altura del labio inferior, del lado derecho
+                l14 = coords[13]        #mejilla a la altura del labio inferior, del lado derecho
+                l15 = coords[14]        #pomulo derecha
+                l16 = coords[15]        #pomulo derecha
+                l17 = coords[16]        #pomulo derecha
+                l69 = coords[68]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l70 = coords[69]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l71 = coords[70]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l72 = coords[71]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l73 = coords[72]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l74 = coords[73]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l75 = coords[74]        #parte alta de la frente, altura de la mitad de la ceja, del lado derecho
+                l76 = coords[75]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l77 = coords[76]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l78 = coords[77]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l79 = coords[78]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l80 = coords[79]        #parte media entre el fin de la ceja y la frente, del lado derecho
+                l81 = coords[80]
+        #------------------------------------------------------
                 d1 = distance(l3, l15)                    #distancia entre los pomulos
-                d2 = distance(l76, l80)
+                d2 = distance(l76, l75)
                 d3 = distance(midpoint(l70, l73), l9)     #distacia de lado a lado de la frente
                 d4 = distance(l9, l13)                    #distancia entre la barbilla y la mejilla
                 d5 = distance(l5, l13)                    #distancia entre mejillas
                 d6 = distance(l7, l11)                    #distancia entre parte alta del menton
                 d7 = distance(l8, l10)                    #distancia entre parte media del menton
+                d8 = distance(l6, l12)
+                d9 = distance(l4, l14)
+                d10 = distance(l1, l17)
+                d11 = distance(l78, l79)
+                d12 = distance(l77,l80)
+                d13 = distance(l69,l6)
+                d14 = distance(l70,l7)
+                d15 = distance(l71,l6)
 
-                DD = d1 + d2 + d3 + d4 + d5 + d6 + d7     #suma de las distancias
-            #------------------------------------------------------
+        #------------------------------------------------------
+
+                DD = d1 + d2 + d3 + d4 + d5 + d6 + d7  + d8 + d9 + d10 + d11 + d12 + d13 + d14 + d15  #suma de las distancias
+        #------------------------------------------------------
                 D1 = d1/DD
                 D2 = d2/DD
                 D3 = d3/DD
@@ -324,7 +404,15 @@ def gen_frames():
                 D5 = d5/DD
                 D6 = d6/DD
                 D7 = d7/DD
-            #------------------------------------------------------
+                D8 = d8/DD
+                D9 = d9/DD
+                D10 = d10/DD
+                D11 = d11/DD
+                D12 = d12/DD
+                D13 = d13/DD
+                D14 = d14/DD
+                D15 = d15/DD
+        #------------------------------------------------------
                 R1 = D2/D1
                 R2 = D1/D3
                 R3 = D2/D3
@@ -335,11 +423,16 @@ def gen_frames():
                 R8 = D5/D2
                 R9 = D4/D5
                 R10 = D7/D6
-            #------------------------------------------------------
-                A1 = angle(midpoint(l70, l73), l9, l11)
-                A2 = angle(midpoint(l70, l73), l9, l13)
-                A3 = angle(l3, l15, l13)
-            #------------------------------------------------------
+        #------------------------------------------------------
+                A1 = angle(midpoint(l70, l73), l9, l11) / 180
+                A2 = angle(midpoint(l70, l73), l9, l13) / 180
+                A3 = angle(l3, l15, l13) / 180
+                A4 = angle(l8, l9, l10) / 180
+                A5 = angle(l3, l4, l7) / 180
+                A6 = angle(l7, l11, l13) / 180
+
+        #------------------------------------------------------
+                features = []
                 features.append(R1)
                 features.append(R2)
                 features.append(R3)
@@ -356,9 +449,20 @@ def gen_frames():
                 features.append(D5)
                 features.append(D6)
                 features.append(D7)
+                features.append(D8)
+                features.append(D9)
+                features.append(D10)
+                features.append(D11)
+                features.append(D12)
+                features.append(D13)
+                features.append(D14)
+                features.append(D15)
                 features.append(A1) #
                 features.append(A2) #
                 features.append(A3) #
+                features.append(A4) #
+                features.append(A5) #
+                features.append(A6)#
 
                 # print(features)
 
