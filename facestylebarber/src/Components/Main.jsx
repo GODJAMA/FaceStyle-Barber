@@ -4,8 +4,7 @@ import './main.css';
 // import VideoUploader from 'Image/VideoUploader';
 import ImageUploader from './Image/ImageUploader';
 import VideoUploader from './Image/videoUploader';
-
-
+import VideoUploader2 from './Image/VideoUploader_2';
 
 function Main() {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -26,10 +25,14 @@ function Main() {
           <div className="option" onClick={() => handleOptionClick('video')}>
             Video
           </div>
+          <div className="option" onClick={() => handleOptionClick('video2')}>
+            Video 2
+          </div>
         </div>
-        <p></p>
+        
         {selectedOption === 'foto' && <ImageUploader />}
         {selectedOption === 'video' && <VideoUploader />}
+        {selectedOption === 'video2' && <VideoUploader2 />}
       </div>
     </div>
   );

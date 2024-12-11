@@ -3,6 +3,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './ImageUploader.css'; // Importar el archivo CSS
 
+import { API_BASE_URL } from '../config';
+// import { log } from '@tensorflow/tfjs';
+
+
 // import image from '../../../public/image/1.jpg'
 
 
@@ -38,6 +42,27 @@ function ImageUploader() {
         setImageUploaded(false);
     };
 
+    // const checkConnection = async () => {
+    //     try {
+    //         // Hacemos una solicitud a /status para verificar si el servidor está en línea
+    //         const response = await fetch(`${API_BASE_URL}/status`);
+    
+    //         // Si la respuesta no es ok (código de estado 200), lanzamos un error
+    //         if (!response.ok) {
+    //             throw new Error('El servidor no está disponible');
+    //         }
+    
+    //         // Si la conexión al servidor es exitosa, mostramos una notificación de éxito
+    //         toast.success('Conexión al servidor exitosa');
+    
+    //     } catch (error) {
+    //         // En caso de error, mostramos una notificación informativa usando toast
+    //         console.error('Error al verificar la conexión:', error);
+    //         toast.info('Error al conectar con el servidor');  // Notificación de info
+    //     }
+    // };
+    
+
     // Función para manejar el envío de la imagen
     const handleImageSubmit = async () => {
         if (!selectedImage) {
@@ -45,13 +70,15 @@ function ImageUploader() {
             console.error('No hay ninguna imagen seleccionada.');
             return; // Salir de la función si no hay imagen seleccionada
         }
+        
         try {
             // Crear un objeto FormData para enviar la imagen
             const formData = new FormData();
             formData.append('image', selectedImage);
-
+            console.log(API_BASE_URL);
+            
             // Realizar la solicitud POST a tu API
-            const response = await fetch('http://192.168.3.47:4000/upload-image', {
+            const response = await fetch(`${API_BASE_URL}/upload-image`, {
                 method: 'POST',
                 body: formData
             });
@@ -63,7 +90,7 @@ function ImageUploader() {
                 toast.success('¡Imagen subida exitosamente!');
                 console.log('Imagen enviada exitosamente a la API.');
 
-                console.log(responseData);
+                // console.log(responseData);
                 // Establecer el estado de subida de la imagen a verdadero
                 setImageUploaded(true);
                 setFaceType(responseData.face_type);
@@ -147,7 +174,7 @@ function ImageUploader() {
 
     const fetchImage = async () => {
         try {
-            const response = await fetch('http://192.168.3.47:4000/image'); // Cambia la URL según sea necesario
+            const response = await fetch(`${API_BASE_URL}/image`); // Cambia la URL según sea necesario
             if (!response.ok) {
                 throw new Error('Error al obtener la imagen');
             }

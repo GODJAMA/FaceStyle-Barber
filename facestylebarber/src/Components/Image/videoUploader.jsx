@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './VideoUploader.css';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
+
+
 
 function VideoUploader() {
   const [showVideo, setShowVideo] = useState(false);
@@ -14,21 +17,21 @@ function VideoUploader() {
   const handleStartAnalysis = () => {
     setShowVideo(true);
     const timestamp = new Date().getTime();
-    setVideoSrc(`http://192.168.3.47:4000/video_feed?timestamp=${timestamp}`);
+    setVideoSrc(`${API_BASE_URL}/video_feed?timestamp=${timestamp}`);
   };
 
   const handleStopAnalysis = () => {
     setShowVideo(false);
 
     try {
-      axios.get('http://192.168.3.47:4000/stop_video');
+      axios.get(`${API_BASE_URL}/stop_video`);
     } catch (error) {
       console.error('Error al detener la captura de video:', error);
     }
   };
 
   const fetchFaceInfo = () => {    
-    axios.get('http://192.168.3.47:4000/get_face_info')
+    axios.get(`${API_BASE_URL}/get_face_info`)
       .then(response => {
         setFaceInfo(response.data.face_info);
         if (response.data.face_info !== "NO DETECTADO") {
