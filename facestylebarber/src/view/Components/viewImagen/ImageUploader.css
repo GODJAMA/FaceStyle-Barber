@@ -2,6 +2,7 @@
     font-size: 16px;
     margin: 0 auto;
     max-width: 1024px;
+
 }
 
 .image {
@@ -9,12 +10,6 @@
     height: auto;
 }
 
-/* Personalización de las notificaciones Toastify de éxito */
-/* .Toastify__toast--success {
-    background-color: #4caf50; /* Cambiar el color de fondo a verde */
-    /* color: white; /* Cambiar el color del texto a blanco */
-  /* }  */ 
-/* */  
 
 .progress-container {
     width: 100%;
@@ -29,7 +24,7 @@
     height: 100%;
     background-color: #007bff;
 }
-/* Estilos para los botones */
+
 .button {
     background-color: #007bff;
     color: white;
@@ -45,34 +40,34 @@
     background-color: #0056b3;
 }
 
-/* Estilo específico para el botón de enviar */
+
 .submit-button {
     margin-left: 20px;
-    background-color: #28a745; /* Cambia el color de fondo a verde */
+    background-color: #28a745;
 }
 
-/* Estilo específico para el botón de borrar */
+
 .delete-button {
-    background-color: #dc3545; /* Cambia el color de fondo a rojo */
+    background-color: #dc3545; 
 }
 
-/* Estilo específico para el botón de subir */
+
 .upload-button {
-    background-color: #ffc107; /* Cambia el color de fondo a amarillo */
-}
-/* Estilos para el input */
-.input-file {
-    display: none; /* Ocultar el input por defecto */
+    background-color: #ffc107; 
 }
 
-/* Estilos para el contenedor del botón personalizado */
+.input-file {
+    display: none; 
+}
+
+
 .custom-input-container {
     display: inline-block;
     position: relative;
     margin-right: 10px;
 }
 
-/* Estilos para el botón personalizado */
+
 .custom-input-button {
     background-color: #007bff;
     color: white;
@@ -83,13 +78,13 @@
     transition: background-color 0.3s ease;
 }
 
-/* Cambiar el estilo del botón al pasar el mouse sobre él */
+
 .custom-input-button:hover {
     background-color: #0056b3;
 }
 
 @media only screen and (max-width: 600px) {
     .submit-button {
-        margin-top: 20px;/* Cambia el color de fondo a verde */
+        margin-top: 20px;
     }
 }

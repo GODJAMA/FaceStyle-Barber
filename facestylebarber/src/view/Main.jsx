@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import './main.css';
-// import ImageUploader from 'Image/ImageUploader';
-// import VideoUploader from 'Image/VideoUploader';
-import ImageUploader from './Image/ImageUploader';
-import VideoUploader from './Image/videoUploader';
-import VideoUploader2 from './Image/VideoUploader_2';
+
+// import ImageUploaderView from './viewImagen/ImageUploaderView';
+import ImageUploaderController from '../controllers/ImageUploaderController.jsx';
+import VideoUploaderController from '../controllers/VideoUploaderController.jsx';
 
 function Main() {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -25,14 +24,11 @@ function Main() {
           <div className="option" onClick={() => handleOptionClick('video')}>
             Video
           </div>
-          <div className="option" onClick={() => handleOptionClick('video2')}>
-            Video 2
-          </div>
         </div>
         
-        {selectedOption === 'foto' && <ImageUploader />}
-        {selectedOption === 'video' && <VideoUploader />}
-        {selectedOption === 'video2' && <VideoUploader2 />}
+        {selectedOption === 'foto' && <ImageUploaderController />}
+        {selectedOption === 'video' && <VideoUploaderController />}
+
       </div>
     </div>
   );

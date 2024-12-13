@@ -1,9 +1,9 @@
-// import './App.css';
-import Header from './Components/Hearder/Header';
-// import ImageUploader from './Components/Image/ImageUploader';
-// import VideoUploader from './Components/Image/videoUploader';
-import Main from './Components/Main';
+// import Header from './Components/Hearder/Header';
+// import Main from './Components/Main';
 
+import Header from './view/Components/Hearder/Header';
+import Main from './view/Main';
+// import './app.css';
 
 function App() {
 
@@ -12,8 +12,6 @@ function App() {
     <div className="App">
       <Header></Header>
       <Main/>
-      {/* <ImageUploader></ImageUploader>
-      <VideoUploader></VideoUploader> */}
     </div>
   );
 }
